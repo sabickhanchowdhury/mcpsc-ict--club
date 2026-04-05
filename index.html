@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MCPSC ICT Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050811;
+      --bg2: #080d1a;
+      --cyan: #00f5ff;
+      --violet: #7c3aed;
+      --violet2: #a855f7;
+      --gold: #fbbf24;
+      --white: #f0f4ff;
+      --muted: #8892b0;
+      --card: rgba(255,255,255,0.04);
+      --border: rgba(0,245,255,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 6%;
+      backdrop-filter: blur(20px);
+      background: rgba(5,8,17,0.85);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--cyan), var(--violet2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      color: #000 !important;
+      padding: 0.5rem 1.3rem;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      -webkit-text-fill-color: #000 !important;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 8rem 6% 4rem;
+      overflow: hidden;
+    }
+
+    /* ANIMATED GRID */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+      animation: gridScroll 20s linear infinite;
+    }
+
+    @keyframes gridScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(60px); }
+    }
+
+    /* GLOWING ORBS */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--violet) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    .orb2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+      bottom: 0; right: -50px;
+      animation-delay: -4s;
+    }
+    .orb3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.12;
+      animation-delay: -2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,245,255,0.08);
+      border: 1px solid rgba(0,245,255,0.25);
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 1.2rem;
+      animation: fadeUp 0.8s 0.2s ease forwards;
+      opacity: 0;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--violet2) 50%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .school-name {
+      font-size: 0.95rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+      animation: fadeUp 0.8s 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: rgba(240,244,255,0.75);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: fadeUp 0.8s 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      color: #000;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 30px rgba(0,245,255,0.25);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 50px rgba(0,245,255,0.45);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.8s 0.7s ease forwards;
+      opacity: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--violet2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 6%; position: relative; }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    /* ABOUT */
+    .about {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hex-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 8px;
+    }
+
+    .hex {
+      width: 60px;
+      height: 60px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: background 0.3s, transform 0.3s;
+      cursor: default;
+    }
+
+    .hex:hover {
+      background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(124,58,237,0.15));
+      transform: scale(1.1);
+    }
+
+    .hex.active {
+      background: linear-gradient(135deg, rgba(0,245,255,0.2), rgba(124,58,237,0.2));
+      box-shadow: 0 0 20px rgba(0,245,255,0.2);
+    }
+
+    /* DEPARTMENTS */
+    .departments { max-width: 1100px; margin: 0 auto; }
+    .dept-header { margin-bottom: 3rem; }
+
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dept-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .dept-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+
+    .dept-card:hover::before { transform: scaleX(1); }
+    .dept-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,245,255,0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .dept-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(124,58,237,0.15));
+      border: 1px solid rgba(0,245,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .dept-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.5px;
+    }
+
+    .dept-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    /* EVENTS */
+    .events-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .events-inner { max-width: 1100px; margin: 0 auto; }
+    .events-header { margin-bottom: 3rem; }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .event-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .event-banner {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-banner-1 { background: linear-gradient(135deg, #0d1b40, #1a0533); }
+    .event-banner-2 { background: linear-gradient(135deg, #001a1a, #0d1b40); }
+    .event-banner-3 { background: linear-gradient(135deg, #1a0520, #0d0d30); }
+
+    .event-body { padding: 1.5rem; }
+    .event-tag {
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .event-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .event-desc {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* JOIN */
+    .join-section {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .join-box {
+      background: linear-gradient(135deg, rgba(0,245,255,0.06), rgba(124,58,237,0.06));
+      border: 1px solid rgba(0,245,255,0.2);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .join-box::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(from 0deg, transparent 0%, var(--cyan) 5%, transparent 10%);
+      animation: rotate 8s linear infinite;
+      opacity: 0.08;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .join-box-inner { position: relative; z-index: 1; }
+
+    .join-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .join-desc {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 3rem 6%;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand .logo { font-size: 1.2rem; display: block; margin-bottom: 0.8rem; }
+    .footer-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul li a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.3s;
+    }
+    .footer-col ul li a:hover { color: var(--white); }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 2rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .social-links { display: flex; gap: 0.8rem; }
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: var(--muted);
+      transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .social-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0,245,255,0.2);
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HAMBURGER */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: 0.3s; }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(5,8,17,0.98); flex-direction: column; padding: 1.5rem; gap: 1.2rem; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+      .hex-grid { grid-template-columns: repeat(3, 60px); }
+      .stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">MCPSC ICT</div>
+    <div class="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#departments">Departments</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#join" class="nav-cta">Join Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="hero-content">
+      <div class="badge">Mirpur Cantonment Public School & College</div>
+      <h1><span>MCPSC</span><br>ICT Club</h1>
+      <p class="school-name">WHERE TECHNOLOGY MEETS INNOVATION</p>
+      <p class="tagline">Empowering the next generation of tech leaders through coding, innovation, and digital creativity.</p>
+      <div class="hero-btns">
+        <a href="#join" class="btn-primary">Join the Club →</a>
+        <a href="#about" class="btn-secondary">Learn More</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num" data-target="120">0+</div>
+          <div class="stat-label">Members</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" data-target="15">0+</div>
+          <div class="stat-label">Events</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" data-target="30">0+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" data-target="5">0+</div>
+          <div class="stat-label">Years Active</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-inner">
+      <div class="about-text reveal">
+        <div class="section-label">About Us</div>
+        <h2 class="section-title">More Than Just a Club</h2>
+        <p class="section-desc" style="margin-bottom:1.2rem;">
+          MCPSC ICT Club is a hub for technology enthusiasts at Mirpur Cantonment Public School & College. We believe technology is the language of the future — and we're here to help you speak it fluently.
+        </p>
+        <p class="section-desc">
+          From web development and programming to robotics, cybersecurity, and AI — our club is where curiosity turns into creation. Join a community of thinkers, builders, and digital innovators.
+        </p>
+      </div>
+      <div class="about-visual reveal">
+        <div class="hex-grid">
+          <div class="hex active">💻</div>
+          <div class="hex">🌐</div>
+          <div class="hex active">🤖</div>
+          <div class="hex">📱</div>
+          <div class="hex">🔐</div>
+          <div class="hex active">⚡</div>
+          <div class="hex">🧠</div>
+          <div class="hex active">📡</div>
+          <div class="hex">🎮</div>
+          <div class="hex active">🛠️</div>
+          <div class="hex">📊</div>
+          <div class="hex">🚀</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPARTMENTS -->
+  <section id="departments">
+    <div class="departments">
+      <div class="dept-header reveal">
+        <div class="section-label">Our Structure</div>
+        <h2 class="section-title">Departments</h2>
+        <p class="section-desc">Each department drives a unique aspect of our club's mission — find where you belong.</p>
+      </div>
+      <div class="dept-grid">
+        <div class="dept-card reveal">
+          <div class="dept-icon">💻</div>
+          <div class="dept-name">Tech & Development</div>
+          <div class="dept-desc">Building websites, apps, and digital tools. From frontend design to backend systems, we code the future.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-icon">🎨</div>
+          <div class="dept-name">Creative & Design</div>
+          <div class="dept-desc">Crafting stunning visuals, UI/UX designs, posters, and digital art that bring our club's identity to life.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-icon">📢</div>
+          <div class="dept-name">Media & Publication</div>
+          <div class="dept-desc">Managing social media, newsletters, and content to share our journey and inspire the wider community.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-icon">🔐</div>
+          <div class="dept-name">Cybersecurity</div>
+          <div class="dept-desc">Exploring ethical hacking, digital safety, and security concepts to build a safer digital world.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-icon">🤖</div>
+          <div class="dept-name">AI & Robotics</div>
+          <div class="dept-desc">Experimenting with machine learning, automation, and robotics to push the boundaries of technology.</div>
+        </div>
+        <div class="dept-card reveal">
+          <div class="dept-icon">📋</div>
+          <div class="dept-name">Event Management</div>
+          <div class="dept-desc">Planning and executing hackathons, workshops, competitions, and tech fests that inspire and educate.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="events-section" id="events">
+    <div class="events-inner">
+      <div class="events-header reveal">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">Events & Activities</h2>
+        <p class="section-desc">From national competitions to skill-building workshops — we keep things exciting.</p>
+      </div>
+      <div class="events-grid">
+        <div class="event-card reveal">
+          <div class="event-banner event-banner-1">🏆</div>
+          <div class="event-body">
+            <div class="event-tag">Annual</div>
+            <div class="event-title">Hackathon</div>
+            <div class="event-desc">24-hour coding marathon where teams solve real-world problems and compete for glory.</div>
+          </div>
+        </div>
+        <div class="event-card reveal">
+          <div class="event-banner event-banner-2">🎓</div>
+          <div class="event-body">
+            <div class="event-tag">Monthly</div>
+            <div class="event-title">Tech Workshops</div>
+            <div class="event-desc">Hands-on sessions on Python, web dev, AI, graphic design, and more — led by experienced seniors.</div>
+          </div>
+        </div>
+        <div class="event-card reveal">
+          <div class="event-banner event-banner-3">🌐</div>
+          <div class="event-body">
+            <div class="event-tag">Competitions</div>
+            <div class="event-title">ICT Olympiad</div>
+            <div class="event-desc">Representing MCPSC at inter-school and national ICT competitions with pride.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section id="join">
+    <div class="join-section reveal">
+      <div class="join-box">
+        <div class="join-box-inner">
+          <div class="section-label" style="margin-bottom:1rem;">Ready to Start?</div>
+          <h2 class="join-title">Become a Member of <span style="background: linear-gradient(135deg, var(--cyan), var(--violet2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MCPSC ICT Club</span></h2>
+          <p class="join-desc">Whether you're a beginner or a seasoned coder, there's a place for you here. Apply now and start building your future in tech.</p>
+          <a href="#" class="btn-primary" style="font-size:1rem; padding:1rem 2.5rem;">Apply Now →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo">MCPSC ICT CLUB</span>
+        <p class="footer-desc">Mirpur Cantonment Public School & College's official ICT Club — nurturing the next generation of tech innovators.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#departments">Departments</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#join">Join</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">mcpsc.ict@gmail.com</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 MCPSC ICT Club. All rights reserved.</span>
+      <div class="social-links">
+        <a href="#" class="social-link">f</a>
+        <a href="#" class="social-link">in</a>
+        <a href="#" class="social-link">ig</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // NAV TOGGLE
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('open');
+    }
+
+    // SCROLL REVEAL
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // COUNTER ANIMATION
+    function animateCounters() {
+      document.querySelectorAll('.stat-num').forEach(el => {
+        const target = parseInt(el.getAttribute('data-target'));
+        let count = 0;
+        const step = Math.ceil(target / 60);
+        const timer = setInterval(() => {
+          count = Math.min(count + step, target);
+          el.textContent = count + '+';
+          if (count >= target) clearInterval(timer);
+        }, 25);
+      });
+    }
+
+    // Trigger counter when hero stats visible
+    const statsObs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        animateCounters();
+        statsObs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    statsObs.observe(document.querySelector('.stats'));
+  </script>
+</body>
+</html>
